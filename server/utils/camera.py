@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 
-class Detector:
+class Camera:
     def __init__(self, lowerColor, upperColor, bufferThickness):
         self.lowerColor = lowerColor
         self.upperColor = upperColor
