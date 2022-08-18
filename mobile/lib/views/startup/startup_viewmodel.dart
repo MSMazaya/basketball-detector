@@ -32,6 +32,6 @@ class StartupViewModel extends FormViewModel {
   }
 
   void next() async {
-    await _navigationService.navigateTo(Routes.bluetoothConfigView);
+    await _navigationService.navigateTo(Routes.controlView);
   }
 }

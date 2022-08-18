@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/views/main/main_viewmodel.dart';
+import 'package:mobile_app/views/layout_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
-class MainView extends StatelessWidget {
-  const MainView({Key? key}) : super(key: key);
+class LayoutView extends StatelessWidget {
+  const LayoutView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MainViewModel>.reactive(
-      viewModelBuilder: () => MainViewModel(),
+    return ViewModelBuilder<LayoutViewModel>.reactive(
+      viewModelBuilder: () => LayoutViewModel(),
       builder: (context, model, child) {
         return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(255, 43, 77, 190),
+            title: Text('Basketball Tracker'),
+          ),
           body: Container(
             alignment: Alignment.center,
             decoration: const BoxDecoration(
@@ -39,20 +43,15 @@ class MainView extends StatelessWidget {
             unselectedItemColor: Colors.white,
             currentIndex: model.currentTabIndex,
             onTap: model.setTabIndex,
-            items: [
+            items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home, color: Colors.white),
-                label: "Control",
-                backgroundColor: Colors.white,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.graphic_eq, color: Colors.white),
-                label: "Activity",
+                icon: Icon(Icons.numbers, color: Colors.white),
+                label: "Scores",
                 backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings, color: Colors.white),
-                label: "Settings",
+                label: "Configuration",
                 backgroundColor: Colors.white,
               ),
             ],

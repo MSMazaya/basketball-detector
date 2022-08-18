@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "289433090249",
+    "project_id": "hmft-op-compvis",
+    "storage_bucket": "hmft-op-compvis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289433090249:android:d8725cc70a92d56b313518",
+        "android_client_info": {
+          "package_name": "com.example.mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289433090249-4bibif6a1m5qpef04a03e0h4p0i3sorm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA16Yob5nYUGEkH7YQ3QMZmCihlNqVOsy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289433090249-4bibif6a1m5qpef04a03e0h4p0i3sorm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
