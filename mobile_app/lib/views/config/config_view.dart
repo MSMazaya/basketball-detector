@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile_app/views/config/config_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -14,43 +15,59 @@ import 'config_view.form.dart';
 class ConfigView extends StatelessWidget with $ConfigView {
   ConfigView({Key? key}) : super(key: key);
 
-  String name = "Angle 1";
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ConfigViewModel>.reactive(
       viewModelBuilder: () => ConfigViewModel(),
-      onModelReady: (model) {
-        // model.getUsername();
-        // model.onMount();
-      },
+      onModelReady: (viewModel) => listenToFormUpdated(viewModel),
+      onDispose: (_) => disposeForm(),
       builder: (context, model, child) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ConfigFormField(
-            name: "Max Angle 1",
-            controller: angle1Controller,
-            focusNode: angle1FocusNode,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConfigFormField(
+                name: "Max Angle 1",
+                controller: angle1Controller,
+                focusNode: angle1FocusNode,
+              ),
+              ConfigFormField(
+                name: "Max Angle 2",
+                controller: angle2Controller,
+                focusNode: angle2FocusNode,
+              ),
+              ConfigFormField(
+                name: "Max Angle 3",
+                controller: angle3Controller,
+                focusNode: angle3FocusNode,
+              ),
+              ConfigFormField(
+                name: "Max Angle 4",
+                controller: angle4Controller,
+                focusNode: angle4FocusNode,
+              ),
+              ConfigFormField(
+                name: "Max Angle 5",
+                controller: angle5Controller,
+                focusNode: angle5FocusNode,
+              ),
+            ],
           ),
-          ConfigFormField(
-            name: "Max Angle 2",
-            controller: angle2Controller,
-            focusNode: angle2FocusNode,
-          ),
-          ConfigFormField(
-            name: "Max Angle 3",
-            controller: angle3Controller,
-            focusNode: angle3FocusNode,
-          ),
-          ConfigFormField(
-            name: "Max Angle 4",
-            controller: angle4Controller,
-            focusNode: angle4FocusNode,
-          ),
-          ConfigFormField(
-            name: "Max Angle 5",
-            controller: angle5Controller,
-            focusNode: angle5FocusNode,
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: OutlinedButton(
+              onPressed: () {
+                HapticFeedback.vibrate();
+                model.updateAngle();
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.green),
+              ),
+              child:
+                  Text("Update Angle", style: TextStyle(color: Colors.white)),
+            ),
           ),
         ],
       ),

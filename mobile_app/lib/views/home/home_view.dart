@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:mobile_app/datamodels/point/point.dart';
@@ -13,21 +14,6 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
-      onModelReady: (model) {
-        // model.getUsername();
-        // model.onMount();
-        var straem = model.getScoreStream();
-        straem.listen((data) {
-          print("HELLOOOO");
-          print(data.docs.length);
-          for (var i = 0; i < data.docs.length; i++) {
-            var score = data.docs[i].get("score");
-            var position = data.docs[i].get("position");
-            print(score);
-            print(position);
-          }
-        });
-      },
       builder: (context, model, child) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,19 +27,23 @@ class HomeView extends StatelessWidget {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Loading");
+                return const Center(child: CircularProgressIndicator());
               }
 
+              final childs =
+                  snapshot.data!.docs.map((DocumentSnapshot<Point> document) {
+                Point? data = document.data();
+                return PlayerScoreCard(
+                  score: data!.score,
+                  position: data.position,
+                  angle: data.angle,
+                );
+              }).toList();
+
+              childs.sort((a, b) => a.position - b.position);
+
               return Column(
-                children:
-                    snapshot.data!.docs.map((DocumentSnapshot<Point> document) {
-                  Point? data = document.data();
-                  return PlayerScoreCard(
-                    score: data!.score,
-                    position: data!.position,
-                    angle: data!.angle,
-                  );
-                }).toList(),
+                children: childs,
               );
             },
           ),
@@ -61,7 +51,10 @@ class HomeView extends StatelessWidget {
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width * 0.8,
             child: OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                HapticFeedback.vibrate();
+                model.resetScore();
+              },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.red),
               ),
@@ -116,7 +109,7 @@ class PlayerScoreCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Position: ${angle}",
+                        "Angle start from ${angle}°",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,

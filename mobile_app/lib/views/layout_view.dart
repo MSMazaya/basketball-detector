@@ -11,6 +11,7 @@ class LayoutView extends StatelessWidget {
       viewModelBuilder: () => LayoutViewModel(),
       builder: (context, model, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 43, 77, 190),
             title: Text('Basketball Tracker'),
