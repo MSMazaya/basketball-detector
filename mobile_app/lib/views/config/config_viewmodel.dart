@@ -19,7 +19,6 @@ class ConfigViewModel extends FormViewModel {
         final data = document.data();
         if (valueMap.containsKey(data!.position)) {
           final angle = valueMap[data.position];
-          print(angle);
           await document.reference.update({"angle": double.parse(angle!)});
         }
       });
