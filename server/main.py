@@ -1,7 +1,8 @@
 import cv2
-from utils.camera import Camera
-from utils.db import DB
-from utils.servo import Servo
+from firebase_admin import threading
+from models.camera import Camera
+from models.db import DB
+from models.servo import Servo
 
 
 def createCamera():
@@ -27,22 +28,25 @@ def main(debug=False):
     servo = Servo()
     camera.startCapture()
 
+    db.listenToUpdate(servo.getPointsData)
+    
     registerInterrupt(interruptIR, args=(db, camera.getBallPosition()))
-
+    
     while True:
-        position = camera.getBallPosition()
-
-        if position is not None:
-            servo.searchForBall()
-
-        if(debug):
-            # Showing frame + give ball trailing line
-            camera.trackBall(position)
-
-        key = cv2.waitKey(1) & 0xFF
-
-        if key == ord("q"):
-            break
+        if(servo.isReady()):
+            position = camera.getBallPosition()
+        
+            if position is not None:
+                servo.searchForBall()
+        
+            if(debug):
+                # Showing frame + give ball trailing line
+                camera.trackBall(position)
+        
+            key = cv2.waitKey(1) & 0xFF
+        
+            if key == ord("q"):
+                break
 
     camera.destroy()
 
