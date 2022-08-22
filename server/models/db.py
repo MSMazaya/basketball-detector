@@ -9,13 +9,14 @@ class DB():
         app = firebase_admin.initialize_app(cred)
         self.db = firestore.client(app)
 
-    def addPoint(self, point):
-        data = {
-            u'x': point[0],
-            u'y': point[1],
-        }
+    def addPoint(self, position):
+        docs = self.db.collection(u'points').where(u'position', u'==', position).stream()
 
-        self.db.collection(u'cities').document(u'LA').set(data)
+        for doc in docs:
+            doc_data = doc.to_dict()
+            score = doc_data['score']
+            self.db.collection(u'points').document(doc.id).update({'score': score+1})
+
 
     def listenToUpdate(self, func):
         coll_ref = self.db.collection(u'points')

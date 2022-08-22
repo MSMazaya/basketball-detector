@@ -1,8 +1,8 @@
 import cv2
-from firebase_admin import threading
 from models.camera import Camera
 from models.db import DB
 from models.servo import Servo
+from models.ir_sensor import IRSensor
 
 
 def createCamera():
@@ -12,39 +12,34 @@ def createCamera():
     return Camera(orangeLower, orangeUpper, bufferThickness)
 
 
-def interruptIR(db, position):
-    # t = threading.Thread(target=db.addPoint,
-    #                      args=([position[0], position[1]]))
-    db.addPoint(position)
-
-
-def registerInterrupt(fn, args):
-    pass
-
-
 def main(debug=False):
     camera = createCamera()
     db = DB()
     servo = Servo()
+    ir = IRSensor(23)
+
+    def callback():
+        db.addPoint(camera.getBallPosition())
+
+    ir.interrupt_callback(callback)
+   
     camera.startCapture()
 
     db.listenToUpdate(servo.getPointsData)
-    
-    registerInterrupt(interruptIR, args=(db, camera.getBallPosition()))
-    
+  
     while True:
         if(servo.isReady()):
             position = camera.getBallPosition()
-        
-            if position is not None:
+      
+            if position is None:
                 servo.searchForBall()
-        
+      
             if(debug):
                 # Showing frame + give ball trailing line
                 camera.trackBall(position)
-        
+      
             key = cv2.waitKey(1) & 0xFF
-        
+      
             if key == ord("q"):
                 break
 
