@@ -38,7 +38,7 @@ class FieldView extends StatelessWidget {
                   aspectRatio: model.controller.value.aspectRatio,
                   child: VideoPlayer(model.controller),
                 )
-              : Container()),
+              : const CircularProgressIndicator()),
           const SizedBox(
             height: 10,
             width: 10,

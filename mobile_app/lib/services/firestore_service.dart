@@ -17,4 +17,7 @@ class FirestoreService {
                 PositionConfig.fromJson(snapshot.data()!),
             toFirestore: (position_config, _) => position_config.toJson(),
           );
+
+  final DocumentReference hardwareConfig =
+      FirebaseFirestore.instance.collection('config').doc('hardware');
 }
