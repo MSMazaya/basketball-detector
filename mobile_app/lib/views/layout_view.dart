@@ -24,7 +24,6 @@ class LayoutView extends StatelessWidget {
                 end: Alignment.bottomLeft,
                 colors: [
                   Color.fromARGB(255, 41, 47, 172),
-                  Color.fromARGB(255, 41, 47, 172),
                   Color.fromARGB(255, 18, 26, 62),
                   Color.fromARGB(255, 18, 26, 62),
                   Color.fromARGB(255, 18, 26, 62),
@@ -45,6 +44,11 @@ class LayoutView extends StatelessWidget {
             currentIndex: model.currentTabIndex,
             onTap: model.setTabIndex,
             items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.sports_basketball, color: Colors.white),
+                label: "Field",
+                backgroundColor: Colors.white,
+              ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.numbers, color: Colors.white),
                 label: "Scores",

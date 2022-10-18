@@ -3,6 +3,7 @@ from models.camera import Camera
 from models.db import DB
 from models.servo import Servo
 from models.ir_sensor import IRSensor
+import time
 
 
 def createCamera():
@@ -12,38 +13,34 @@ def createCamera():
     return Camera(orangeLower, orangeUpper, bufferThickness)
 
 
-def main(debug=False):
-    camera = createCamera()
-    db = DB()
-    servo = Servo()
-    ir = IRSensor(23)
+camera = createCamera()
+db = DB()
+servo = Servo()
+ir = IRSensor(23)
 
-    def callback():
-        db.addPoint(camera.getBallPosition())
+def callback():
+    db.addPoint(camera.getBallPosition())
 
-    ir.interrupt_callback(callback)
-   
-    camera.startCapture()
+ir.interrupt_callback(callback)
 
-    db.listenToUpdate(servo.getPointsData)
-  
-    while True:
-        if(servo.isReady()):
-            position = camera.getBallPosition()
-      
-            if position is None:
-                servo.searchForBall()
-      
-            if(debug):
-                # Showing frame + give ball trailing line
-                camera.trackBall(position)
-      
-            key = cv2.waitKey(1) & 0xFF
-      
-            if key == ord("q"):
-                break
+camera.startCapture()
+
+db.listenToUpdate(servo.getPointsData)
+
+while True:
+    if(servo.isReady()):
+        position = camera.getBallPosition()
+
+        if position is None:
+            servo.searchForBall()
+
+        # Showing frame + give ball trailing line
+        camera.trackBall(position)
+
+        key = cv2.waitKey(1) & 0xFF
+
+        if key == ord("q"):
+            break
 
     camera.destroy()
 
-
-main(debug=True)

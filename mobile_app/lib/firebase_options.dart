@@ -66,7 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '289433090249',
     projectId: 'hmft-op-compvis',
     storageBucket: 'hmft-op-compvis.appspot.com',
-    iosClientId: '289433090249-4a7ttddlsuliko2k9sgk3gmlht9a552q.apps.googleusercontent.com',
+    iosClientId:
+        '289433090249-4a7ttddlsuliko2k9sgk3gmlht9a552q.apps.googleusercontent.com',
     iosBundleId: 'com.example.mobileApp',
   );
 
@@ -76,7 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '289433090249',
     projectId: 'hmft-op-compvis',
     storageBucket: 'hmft-op-compvis.appspot.com',
-    iosClientId: '289433090249-4a7ttddlsuliko2k9sgk3gmlht9a552q.apps.googleusercontent.com',
+    iosClientId:
+        '289433090249-4a7ttddlsuliko2k9sgk3gmlht9a552q.apps.googleusercontent.com',
     iosBundleId: 'com.example.mobileApp',
   );
 }

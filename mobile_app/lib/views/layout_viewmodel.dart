@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_app/views/config/config_view.dart';
+import 'package:mobile_app/views/fields/fields_view.dart';
 import 'package:mobile_app/views/home/home_view.dart';
 import 'package:stacked/stacked.dart';
 
@@ -24,9 +25,12 @@ class LayoutViewModel extends BaseViewModel {
     if (!_viewCache.containsKey(index)) {
       switch (index) {
         case 0:
-          _viewCache[index] = HomeView();
+          _viewCache[index] = FieldView();
           break;
         case 1:
+          _viewCache[index] = HomeView();
+          break;
+        case 2:
           _viewCache[index] = ConfigView();
           break;
       }
