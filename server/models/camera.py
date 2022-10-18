@@ -1,4 +1,4 @@
-
+import subprocess
 import imutils
 from imutils.video import VideoStream
 from collections import deque
@@ -6,20 +6,23 @@ from imutils.video.count_frames import cv2
 import numpy as np
 import time
 
-
 class Camera:
     def __init__(self, lowerColor, upperColor, bufferThickness):
         self.lowerColor = lowerColor
         self.upperColor = upperColor
         self.bufferThickness = bufferThickness
         self.pts = deque(maxlen=bufferThickness)
+        self.startedRTMP = False
 
     def startCapture(self):
-        self.vs = VideoStream(src=0).start()
+        self.vs = cv2.VideoCapture(0)
+        self.startRTMP()
         time.sleep(2)
 
     def getBallPosition(self):
-        frame = self.vs.read()
+        ret, frame = self.vs.read()
+        if not ret: 
+            return
         frame = imutils.resize(frame, width=600)
 
         blurred = cv2.GaussianBlur(frame, (11, 11), 0)
@@ -56,7 +59,9 @@ class Camera:
         return center
 
     def trackBall(self, center):
-        frame = self.vs.read()
+        ret, frame = self.vs.read()
+        if not ret:
+            return
         self.pts.appendleft(center)
 
         # loop over the set of tracked points
@@ -72,7 +77,66 @@ class Camera:
                      self.pts[i], (0, 0, 255), thickness)
 
         cv2.imshow("Frame", frame)
+        self.publishRTMP(frame)
+
+    def startRTMP(self):
+        rtmp_url = "rtmp://127.0.0.1:1935/stream/pupils_trace"
+        fps = int(self.vs.get(cv2.CAP_PROP_FPS))
+        width = int(self.vs.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(self.vs.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+        command = ['ffmpeg',
+                   '-y',
+                   '-f', 'rawvideo',
+                   '-vcodec', 'rawvideo',
+                   '-pix_fmt', 'bgr24',
+                   '-s', "{}x{}".format(width, height),
+                   '-r', str(fps),
+                   '-i', '-',
+                   '-c:v', 'libx264',
+                   '-pix_fmt', 'yuv420p',
+                   '-preset', 'ultrafast',
+                   '-f', 'flv',
+                   rtmp_url ]
+
+        self.p = subprocess.Popen(command, stdin=subprocess.PIPE)
+        self.startedRTMP = True
+
+    def publishRTMP(self,frame):
+        if self.startedRTMP:
+            self.p.stdin.write(frame.tobytes())
 
     def destroy(self):
-        self.vs.stop()
+        self.vs.destroy()
         cv2.destroyAllWindows()
+
+
+"""
+usage example
+
+import cv2
+from models.camera import Camera
+
+def createCamera():
+    bufferThickness = 30
+    orangeLower = (10, 200, 20)
+    orangeUpper = (15, 255, 255)
+    return Camera(orangeLower, orangeUpper, bufferThickness)
+
+camera = createCamera()
+
+camera.startCapture()
+
+while True:
+    position = camera.getBallPosition()
+
+    # Showing frame + give ball trailing line
+    camera.trackBall(position)
+
+    key = cv2.waitKey(1) & 0xFF
+
+    if key == ord("q"):
+        break
+
+camera.destroy()
+"""
