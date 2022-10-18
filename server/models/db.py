@@ -2,7 +2,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-
 class DB():
     def __init__(self):
         cred = credentials.Certificate("./secret.json")
@@ -17,6 +16,8 @@ class DB():
             score = doc_data['score']
             self.db.collection(u'points').document(doc.id).update({'score': score+1})
 
+    def changeIP(self, newIP):
+        self.db.collection(u'config').document(u'hardware').set({'ip': newIP})
 
     def listenToUpdate(self, func):
         coll_ref = self.db.collection(u'points')
