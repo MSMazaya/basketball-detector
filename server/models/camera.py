@@ -62,15 +62,15 @@ class Camera:
         frame = cv2.line(frame, start_point, end_point, color, thickness)
 
     def detectPosition(self, input_x, input_y):
-        if (input_y < line_h_top[0][1] and input_x > line_v_left[1][0] and input_x < line_v_right[1][0]):
+        if (input_y < self.line_h_top[0][1] and input_x > self.line_v_left[1][0] and input_x < self.line_v_right[1][0]):
             return 3
-        elif (input_x < line_v[0][0] and input_y < line_h[0][1]) and input_y > line_h_top[0][1]:
+        elif (input_x < self.line_v[0][0] and input_y < self.line_h[0][1]) and input_y > self.line_h_top[0][1]:
             return 4
-        elif (input_x > line_v[1][0] and input_y < line_h[0][1]) and input_y > line_h_top[0][1]:
+        elif (input_x > self.line_v[1][0] and input_y < self.line_h[0][1]) and input_y > self.line_h_top[0][1]:
             return 2
-        elif (input_x < line_v[0][0] and input_y > line_h[1][1]) :
+        elif (input_x < self.line_v[0][0] and input_y > self.line_h[1][1]) :
             return 5
-        elif (input_x > line_v[1][0] and input_y > line_h[1][1]) :
+        elif (input_x > self.line_v[1][0] and input_y > self.line_h[1][1]) :
             return 1
 
     def trackBall(self, center):
@@ -92,20 +92,24 @@ class Camera:
                      self.pts[i], (0, 0, 255), thickness)
     
     
-        line_v = [[frame.shape[1]/2, frame.shape[0]*1/2],[frame.shape[1]/2, frame.shape[0]]]
-        line_v_left = [[frame.shape[1]*2/5, frame.shape[0]*1/3],[frame.shape[1]*2/5, frame.shape[0]*1/2]]
-        line_v_right = [[frame.shape[1]*3/5, frame.shape[0]*1/3],[frame.shape[1]*3/5, frame.shape[0]*1/2]]
-        line_h = [[frame.shape[1]*1/10, frame.shape[0]*3/4],[frame.shape[1]*9/10, frame.shape[0]*3/4]]
-        line_h_top = [[frame.shape[1]*2/5, frame.shape[0]*1/2],[frame.shape[1]*3/5, frame.shape[0]*1/2]]
-        
-        draw_line(frame, ( int(line_v[1][0]), int(line_v[1][1]) ), (int(line_v[0][0]), int(line_v[0][1])), color, thickness)
-        draw_line(frame, ( int(line_h[1][0]), int(line_h[1][1]) ), (int(line_h[0][0]), int(line_h[0][1])), color, thickness)
-        draw_line(frame, ( int(line_h_top[1][0]), int(line_h_top[1][1]) ), (int(line_h_top[0][0]), int(line_h_top[0][1])), color, thickness)
-        draw_line(frame, ( int(line_v_left[1][0]), int(line_v_left[1][1]) ), (int(line_v_left[0][0]), int(line_v_left[0][1])), color, thickness)
-        draw_line(frame, ( int(line_v_right[1][0]), int(line_v_right[1][1]) ), (int(line_v_right[0][0]), int(line_v_right[0][1])), color, thickness)
+        self.line_v = [[frame.shape[1]/2, frame.shape[0]*1/2],[frame.shape[1]/2, frame.shape[0]]]
+        self.line_v_left = [[frame.shape[1]*2/5, frame.shape[0]*1/3],[frame.shape[1]*2/5, frame.shape[0]*1/2]]
+        self.line_v_right = [[frame.shape[1]*3/5, frame.shape[0]*1/3],[frame.shape[1]*3/5, frame.shape[0]*1/2]]
+        self.line_h = [[frame.shape[1]*1/10, frame.shape[0]*3/4],[frame.shape[1]*9/10, frame.shape[0]*3/4]]
+        self.line_h_top = [[frame.shape[1]*2/5, frame.shape[0]*1/2],[frame.shape[1]*3/5, frame.shape[0]*1/2]]
+
+
+        color = (0, 0, 255)
+        thickness = 3
+
+        self.draw_line(frame, ( int(self.line_v[1][0]), int(self.line_v[1][1]) ), (int(self.line_v[0][0]), int(self.line_v[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_h[1][0]), int(self.line_h[1][1]) ), (int(self.line_h[0][0]), int(self.line_h[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_h_top[1][0]), int(self.line_h_top[1][1]) ), (int(self.line_h_top[0][0]), int(self.line_h_top[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_v_left[1][0]), int(self.line_v_left[1][1]) ), (int(self.line_v_left[0][0]), int(self.line_v_left[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_v_right[1][0]), int(self.line_v_right[1][1]) ), (int(self.line_v_right[0][0]), int(self.line_v_right[0][1])), color, thickness)
         
         cv2.imshow("Frame", frame)
-        self.publishRTMP(frame)
+        # self.publishRTMP(frame)
 
     def startRTMP(self):
         rtmp_url = "rtmp://127.0.0.1:1935/stream/pupils_trace"

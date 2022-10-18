@@ -12,11 +12,13 @@ def createCamera():
 
 db = DB()
 db.changeIP(getIP())
-db.listenToUpdate(servo.getPointsData)
 ir = IRSensor(23)
 
-def callback():
-    db.addPoint(camera.getSegment())
+def callback(id):
+    position = camera.getBallPosition()
+    if position != None:
+        x,y = position
+        db.addPoint(camera.detectPosition(x, y))
 
 ir.interrupt_callback(callback)
 
