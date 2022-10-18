@@ -1,10 +1,8 @@
 import cv2
 from models.camera import Camera
 from models.db import DB
-from models.servo import Servo
 from models.ir_sensor import IRSensor
-import time
-
+from models.utils import getIP
 
 def createCamera():
     bufferThickness = 30
@@ -12,35 +10,28 @@ def createCamera():
     orangeUpper = (15, 255, 255)
     return Camera(orangeLower, orangeUpper, bufferThickness)
 
-
-camera = createCamera()
 db = DB()
-servo = Servo()
+db.changeIP(getIP())
+db.listenToUpdate(servo.getPointsData)
 ir = IRSensor(23)
 
 def callback():
-    db.addPoint(camera.getBallPosition())
+    db.addPoint(camera.getSegment())
 
 ir.interrupt_callback(callback)
 
+camera = createCamera()
 camera.startCapture()
 
-db.listenToUpdate(servo.getPointsData)
-
 while True:
-    if(servo.isReady()):
-        position = camera.getBallPosition()
+    position = camera.getBallPosition()
 
-        if position is None:
-            servo.searchForBall()
+    # Showing frame + give ball trailing line
+    camera.trackBall(position)
 
-        # Showing frame + give ball trailing line
-        camera.trackBall(position)
+    key = cv2.waitKey(1) & 0xFF
 
-        key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
 
-        if key == ord("q"):
-            break
-
-    camera.destroy()
-
+camera.destroy()
