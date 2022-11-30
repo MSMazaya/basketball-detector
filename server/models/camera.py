@@ -12,11 +12,9 @@ class Camera:
         self.upperColor = upperColor
         self.bufferThickness = bufferThickness
         self.pts = deque(maxlen=bufferThickness)
-        self.startedRTMP = False
 
     def startCapture(self):
         self.vs = cv2.VideoCapture(0)
-        self.startRTMP()
         time.sleep(2)
 
     def getBallPosition(self):
@@ -109,34 +107,46 @@ class Camera:
         self.draw_line(frame, ( int(self.line_v_right[1][0]), int(self.line_v_right[1][1]) ), (int(self.line_v_right[0][0]), int(self.line_v_right[0][1])), color, thickness)
         
         cv2.imshow("Frame", frame)
+
         # self.publishRTMP(frame)
 
-    def startRTMP(self):
-        rtmp_url = "rtmp://127.0.0.1:1935/stream/pupils_trace"
-        fps = int(self.vs.get(cv2.CAP_PROP_FPS))
-        width = int(self.vs.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(self.vs.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    def getFrame(self):
+        ret, frame = self.vs.read()
+        if not ret:
+            return
 
-        command = ['ffmpeg',
-                   '-y',
-                   '-f', 'rawvideo',
-                   '-vcodec', 'rawvideo',
-                   '-pix_fmt', 'bgr24',
-                   '-s', "{}x{}".format(width, height),
-                   '-r', str(fps),
-                   '-i', '-',
-                   '-c:v', 'libx264',
-                   '-pix_fmt', 'yuv420p',
-                   '-preset', 'ultrafast',
-                   '-f', 'flv',
-                   rtmp_url ]
+        self.pts.appendleft(self.getBallPosition())
 
-        self.p = subprocess.Popen(command, stdin=subprocess.PIPE)
-        self.startedRTMP = True
+        # loop over the set of tracked points
+        for i in range(1, len(self.pts)):
+            # if either of the tracked points are None, ignore
+            # them
+            if self.pts[i - 1] is None or self.pts[i] is None:
+                continue
+            # otherwise, compute the thickness of the line and
+            # draw the connecting lines
+            thickness = int(np.sqrt(self.bufferThickness / float(i + 1)) * 2.5)
+            cv2.line(frame, self.pts[i - 1],
+                     self.pts[i], (0, 0, 255), thickness)
+    
+    
+        self.line_v = [[frame.shape[1]/2, frame.shape[0]*1/2],[frame.shape[1]/2, frame.shape[0]]]
+        self.line_v_left = [[frame.shape[1]*2/5, frame.shape[0]*1/3],[frame.shape[1]*2/5, frame.shape[0]*1/2]]
+        self.line_v_right = [[frame.shape[1]*3/5, frame.shape[0]*1/3],[frame.shape[1]*3/5, frame.shape[0]*1/2]]
+        self.line_h = [[frame.shape[1]*1/10, frame.shape[0]*3/4],[frame.shape[1]*9/10, frame.shape[0]*3/4]]
+        self.line_h_top = [[frame.shape[1]*2/5, frame.shape[0]*1/2],[frame.shape[1]*3/5, frame.shape[0]*1/2]]
 
-    def publishRTMP(self,frame):
-        if self.startedRTMP:
-            self.p.stdin.write(frame.tobytes())
+
+        color = (0, 0, 255)
+        thickness = 3
+
+        self.draw_line(frame, ( int(self.line_v[1][0]), int(self.line_v[1][1]) ), (int(self.line_v[0][0]), int(self.line_v[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_h[1][0]), int(self.line_h[1][1]) ), (int(self.line_h[0][0]), int(self.line_h[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_h_top[1][0]), int(self.line_h_top[1][1]) ), (int(self.line_h_top[0][0]), int(self.line_h_top[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_v_left[1][0]), int(self.line_v_left[1][1]) ), (int(self.line_v_left[0][0]), int(self.line_v_left[0][1])), color, thickness)
+        self.draw_line(frame, ( int(self.line_v_right[1][0]), int(self.line_v_right[1][1]) ), (int(self.line_v_right[0][0]), int(self.line_v_right[0][1])), color, thickness)
+
+        return frame
 
     def destroy(self):
         self.vs.destroy()
