@@ -23,6 +23,7 @@ mixin _$Point {
   int get score => throw _privateConstructorUsedError;
   int get position => throw _privateConstructorUsedError;
   double get angle => throw _privateConstructorUsedError;
+  int get attempt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +34,7 @@ mixin _$Point {
 abstract class $PointCopyWith<$Res> {
   factory $PointCopyWith(Point value, $Res Function(Point) then) =
       _$PointCopyWithImpl<$Res>;
-  $Res call({int score, int position, double angle});
+  $Res call({int score, int position, double angle, int attempt});
 }
 
 /// @nodoc
@@ -49,6 +50,7 @@ class _$PointCopyWithImpl<$Res> implements $PointCopyWith<$Res> {
     Object? score = freezed,
     Object? position = freezed,
     Object? angle = freezed,
+    Object? attempt = freezed,
   }) {
     return _then(_value.copyWith(
       score: score == freezed
@@ -63,6 +65,10 @@ class _$PointCopyWithImpl<$Res> implements $PointCopyWith<$Res> {
           ? _value.angle
           : angle // ignore: cast_nullable_to_non_nullable
               as double,
+      attempt: attempt == freezed
+          ? _value.attempt
+          : attempt // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -72,7 +78,7 @@ abstract class _$$_PointCopyWith<$Res> implements $PointCopyWith<$Res> {
   factory _$$_PointCopyWith(_$_Point value, $Res Function(_$_Point) then) =
       __$$_PointCopyWithImpl<$Res>;
   @override
-  $Res call({int score, int position, double angle});
+  $Res call({int score, int position, double angle, int attempt});
 }
 
 /// @nodoc
@@ -89,6 +95,7 @@ class __$$_PointCopyWithImpl<$Res> extends _$PointCopyWithImpl<$Res>
     Object? score = freezed,
     Object? position = freezed,
     Object? angle = freezed,
+    Object? attempt = freezed,
   }) {
     return _then(_$_Point(
       score: score == freezed
@@ -103,6 +110,10 @@ class __$$_PointCopyWithImpl<$Res> extends _$PointCopyWithImpl<$Res>
           ? _value.angle
           : angle // ignore: cast_nullable_to_non_nullable
               as double,
+      attempt: attempt == freezed
+          ? _value.attempt
+          : attempt // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -111,7 +122,10 @@ class __$$_PointCopyWithImpl<$Res> extends _$PointCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Point implements _Point {
   const _$_Point(
-      {required this.score, required this.position, required this.angle});
+      {required this.score,
+      required this.position,
+      required this.angle,
+      required this.attempt});
 
   factory _$_Point.fromJson(Map<String, dynamic> json) =>
       _$$_PointFromJson(json);
@@ -122,10 +136,12 @@ class _$_Point implements _Point {
   final int position;
   @override
   final double angle;
+  @override
+  final int attempt;
 
   @override
   String toString() {
-    return 'Point(score: $score, position: $position, angle: $angle)';
+    return 'Point(score: $score, position: $position, angle: $angle, attempt: $attempt)';
   }
 
   @override
@@ -135,7 +151,8 @@ class _$_Point implements _Point {
             other is _$_Point &&
             const DeepCollectionEquality().equals(other.score, score) &&
             const DeepCollectionEquality().equals(other.position, position) &&
-            const DeepCollectionEquality().equals(other.angle, angle));
+            const DeepCollectionEquality().equals(other.angle, angle) &&
+            const DeepCollectionEquality().equals(other.attempt, attempt));
   }
 
   @JsonKey(ignore: true)
@@ -144,7 +161,8 @@ class _$_Point implements _Point {
       runtimeType,
       const DeepCollectionEquality().hash(score),
       const DeepCollectionEquality().hash(position),
-      const DeepCollectionEquality().hash(angle));
+      const DeepCollectionEquality().hash(angle),
+      const DeepCollectionEquality().hash(attempt));
 
   @JsonKey(ignore: true)
   @override
@@ -163,7 +181,8 @@ abstract class _Point implements Point {
   const factory _Point(
       {required final int score,
       required final int position,
-      required final double angle}) = _$_Point;
+      required final double angle,
+      required final int attempt}) = _$_Point;
 
   factory _Point.fromJson(Map<String, dynamic> json) = _$_Point.fromJson;
 
@@ -173,6 +192,8 @@ abstract class _Point implements Point {
   int get position;
   @override
   double get angle;
+  @override
+  int get attempt;
   @override
   @JsonKey(ignore: true)
   _$$_PointCopyWith<_$_Point> get copyWith =>

@@ -8,6 +8,7 @@ class Point with _$Point {
     required int score,
     required int position,
     required double angle,
+    required int attempt,
   }) = _Point;
 
   factory Point.fromJson(Map<String, dynamic> json) => _$PointFromJson(json);

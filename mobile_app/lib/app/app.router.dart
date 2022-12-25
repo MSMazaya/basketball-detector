@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../views/config/config_view.dart';
-import '../views/fields/fields_view.dart';
+import '../views/config/lap/lap_view.dart';
 import '../views/home/home_view.dart';
 import '../views/layout_view.dart';
 
@@ -19,12 +19,12 @@ class Routes {
   static const String layoutView = '/';
   static const String homeView = '/home-view';
   static const String configView = '/config-view';
-  static const String fieldView = '/field-view';
+  static const String lapView = '/lap-view';
   static const all = <String>{
     layoutView,
     homeView,
     configView,
-    fieldView,
+    lapView,
   };
 }
 
@@ -35,7 +35,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.layoutView, page: LayoutView),
     RouteDef(Routes.homeView, page: HomeView),
     RouteDef(Routes.configView, page: ConfigView),
-    RouteDef(Routes.fieldView, page: FieldView),
+    RouteDef(Routes.lapView, page: LapView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -61,9 +61,13 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
-    FieldView: (data) {
+    LapView: (data) {
+      var args = data.getArgs<LapViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const FieldView(),
+        builder: (context) => LapView(
+          key: args.key,
+          time: args.time,
+        ),
         settings: data,
       );
     },
@@ -78,6 +82,13 @@ class StackedRouter extends RouterBase {
 class ConfigViewArguments {
   final Key? key;
   ConfigViewArguments({this.key});
+}
+
+/// LapView arguments holder class
+class LapViewArguments {
+  final Key? key;
+  final String time;
+  LapViewArguments({this.key, required this.time});
 }
 
 /// ************************************************************************
@@ -135,7 +146,9 @@ extension NavigatorStateExtension on NavigationService {
     );
   }
 
-  Future<dynamic> navigateToFieldView({
+  Future<dynamic> navigateToLapView({
+    Key? key,
+    required String time,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -143,7 +156,8 @@ extension NavigatorStateExtension on NavigationService {
         transition,
   }) async {
     return navigateTo(
-      Routes.fieldView,
+      Routes.lapView,
+      arguments: LapViewArguments(key: key, time: time),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

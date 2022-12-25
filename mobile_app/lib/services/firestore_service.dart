@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mobile_app/datamodels/lap/lap.dart';
 import 'package:mobile_app/datamodels/point/point.dart';
 import 'package:mobile_app/datamodels/position_config/position_config.dart';
 
@@ -20,4 +21,10 @@ class FirestoreService {
 
   final DocumentReference hardwareConfig =
       FirebaseFirestore.instance.collection('config').doc('hardware');
+
+  final CollectionReference<Lap> lapCollection =
+      FirebaseFirestore.instance.collection('lap').withConverter<Lap>(
+            fromFirestore: (snapshot, _) => Lap.fromJson(snapshot.data()!),
+            toFirestore: (position_config, _) => position_config.toJson(),
+          );
 }

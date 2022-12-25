@@ -14,54 +14,57 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
-      builder: (context, model, child) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          StreamBuilder<QuerySnapshot<Point>>(
-            stream: model.getScoreStream(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Point>> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Something went wrong');
-              }
+      builder: (context, model, child) => SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            StreamBuilder<QuerySnapshot<Point>>(
+              stream: model.getScoreStream(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Point>> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              final childs =
-                  snapshot.data!.docs.map((DocumentSnapshot<Point> document) {
-                Point? data = document.data();
-                return PlayerScoreCard(
-                  score: data!.score,
-                  position: data.position,
-                  angle: data.angle,
+                final childs =
+                    snapshot.data!.docs.map((DocumentSnapshot<Point> document) {
+                  Point? data = document.data();
+                  return PlayerScoreCard(
+                    score: data!.score,
+                    position: data.position,
+                    attempt: data.attempt,
+                  );
+                }).toList();
+
+                childs.sort((a, b) => a.position - b.position);
+
+                return Column(
+                  children: childs,
                 );
-              }).toList();
-
-              childs.sort((a, b) => a.position - b.position);
-
-              return Column(
-                children: childs,
-              );
-            },
-          ),
-          Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: OutlinedButton(
-              onPressed: () {
-                HapticFeedback.vibrate();
-                model.resetScore();
               },
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.red),
-              ),
-              child: Text("Reset Score", style: TextStyle(color: Colors.white)),
             ),
-          ),
-        ],
+            Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: OutlinedButton(
+                onPressed: () {
+                  HapticFeedback.vibrate();
+                  model.resetScore();
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.red),
+                ),
+                child:
+                    Text("Reset Score", style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -72,12 +75,12 @@ class PlayerScoreCard extends StatelessWidget {
     Key? key,
     required this.score,
     required this.position,
-    required this.angle,
+    required this.attempt,
   }) : super(key: key);
 
   final int score;
   final int position;
-  final double angle;
+  final int attempt;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +112,7 @@ class PlayerScoreCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Angle start from ${angle}°",
+                        "Attempt: $attempt",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,
