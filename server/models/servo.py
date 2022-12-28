@@ -1,4 +1,4 @@
-port RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from firebase_admin import threading
 
 
@@ -16,11 +16,10 @@ class Servo:
         self.pwm_channel.start(0)
 
     def getPointsData(self, col_snapshot, changes, read_time):
-        newData= []
+        newData = []
         for doc in col_snapshot:
             newData.append(doc.to_dict())
         self.pointsData = newData
-        print(self.pointsData)
         self.callback_done.set()
 
     def isReady(self):

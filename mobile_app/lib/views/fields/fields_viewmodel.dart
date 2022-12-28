@@ -45,27 +45,27 @@ class FieldsViewModel extends BaseViewModel {
   Position getPosition(int number) {
     switch (number) {
       case 1:
-        return Position(150, 10);
+        return Position(180, 30);
       case 2:
-        return Position(205, 30);
+        return Position(300, 30);
       case 3:
-        return Position(150, 70);
+        return Position(180, 100);
       case 4:
-        return Position(100, 30);
+        return Position(70, 25);
       case 5:
-        return Position(255, 30);
+        return Position(360, 25);
       case 6:
-        return Position(235, 80);
+        return Position(290, 100);
       case 7:
-        return Position(150, 120);
+        return Position(180, 170);
       case 8:
         return Position(50, 80);
       case 9:
-        return Position(20, 30);
+        return Position(5, 25);
       case 10:
-        return Position(255, 150);
+        return Position(350, 150);
       case 11:
-        return Position(150, 175);
+        return Position(180, 220);
       case 12:
         return Position(20, 150);
       default:
@@ -76,27 +76,27 @@ class FieldsViewModel extends BaseViewModel {
   Position getPositionMode3(int number) {
     switch (number) {
       case 1:
-        return Position(140, 10);
+        return Position(180, 20);
       case 2:
-        return Position(195, 30);
+        return Position(290, 20);
       case 3:
-        return Position(140, 70);
+        return Position(180, 100);
       case 4:
-        return Position(80, 30);
+        return Position(70, 20);
       case 5:
-        return Position(255, 10);
+        return Position(340, 20);
       case 6:
-        return Position(225, 80);
+        return Position(290, 100);
       case 7:
-        return Position(140, 120);
+        return Position(180, 155);
       case 8:
-        return Position(45, 80);
+        return Position(50, 80);
       case 9:
-        return Position(10, 10);
+        return Position(5, 20);
       case 10:
-        return Position(255, 150);
+        return Position(350, 150);
       case 11:
-        return Position(140, 170);
+        return Position(180, 210);
       case 12:
         return Position(20, 150);
       default:

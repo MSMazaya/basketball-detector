@@ -18,10 +18,3 @@ class DB():
 
     def changeIP(self, newIP):
         self.db.collection(u'config').document(u'hardware').set({'ip': newIP})
-
-    def listenToUpdate(self, func):
-        coll_ref = self.db.collection(u'points')
-
-        col_watch = coll_ref.on_snapshot(func)
-
-        print(col_watch)

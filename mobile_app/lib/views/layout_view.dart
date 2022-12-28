@@ -34,7 +34,9 @@ class LayoutView extends StatelessWidget {
             ),
             child: Container(
               padding: EdgeInsets.only(top: 50, bottom: 10),
-              width: MediaQuery.of(context).size.width * 0.8,
+              width: !(model.currentTabIndex == 1)
+                  ? MediaQuery.of(context).size.width
+                  : MediaQuery.of(context).size.width * 0.8,
               child: model.getViewForIndex(model.currentTabIndex),
             ),
           ),

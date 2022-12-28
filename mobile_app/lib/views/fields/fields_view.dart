@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ext_video_player/ext_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/views/fields/fields_viewmodel.dart';
 import 'package:stacked/stacked.dart';
@@ -66,6 +67,12 @@ class FieldView extends StatelessWidget {
             height: 30,
             width: 10,
           ),
+          (model.ready
+              ? AspectRatio(
+                  aspectRatio: model.controller.value.aspectRatio,
+                  child: VideoPlayer(model.controller),
+                )
+              : const CircularProgressIndicator()),
           Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
